@@ -7,6 +7,7 @@ from git_text import app
 from git_text import models
 from git_text.database import Base, engine, session
 
+from datetime import datetime
 
 class TestAPI(unittest.TestCase):
     """ Tests for the git_text API """
@@ -32,3 +33,37 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(app.config['DATABASE_URI'],
             'postgresql://localhost:5432/git_text_test'
         )
+
+    def test_get_empty_commits(self):
+    	""" Getting commits from an empty database """
+    	response = self.client.get("/commits",
+    		headers=[("Accept", "application/json")])
+
+    	self.assertEqual(response.status_code, 200)
+    	self.assertEqual(response.mimetype, "application/json")
+
+    	data = json.loads(response.data)
+    	self.assertEqual(data, [])
+
+    def test_get_commits(self):
+    	""" Getting commits from a populated database """
+    	commitA = models.Commit()
+    	commitB = models.Commit()
+
+    	session.add_all([commitA, commitB])
+    	session.commit()
+
+    	response = self.client.get("/commits",
+    		headers=[("Accept", "application/json")])
+
+    	self.assertEqual(response.status_code, 200)
+    	self.assertEqual(response.mimetype, "application/json")
+
+    	data = json.loads(response.data)
+    	self.assertEqual(len(data), 2)
+
+    	commitA = data[0]
+    	self.assertEqual(commitA["id"], 1)
+
+    	commitB = data[1]
+    	self.assertEqual(commitB["id"], 2)
