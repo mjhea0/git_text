@@ -13,6 +13,11 @@ import requests
 import moment
 from datetime import datetime
 
+from info import *
+
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+
 
 
 @app.route("/", methods=["GET"])
@@ -20,9 +25,9 @@ def get_updates():
 	git_commits = get_user_commits()
 	print type(git_commits)
 	if git_commits["total_count"] > 0:
-		return "yayyyyy"
-
+		return "yayyyyy", send_text()
 	return "nayyyy"
+	return send_text()
 
 
 @app.route("/commits", methods=["GET"])
@@ -48,6 +53,9 @@ def get_user_commits():
 def send_text():
 	# connect to the server
 	server = smtplib.SMTP('smtp.gmail.com:587')
+	server.ehlo()
+	server.starttls()
+	server.ehlo()
 	server.login(address, password)
 
 	msg = MIMEMultipart()
