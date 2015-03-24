@@ -45,6 +45,19 @@ def get_user_commits():
 	except: # this needs to be fixed
 		return "fix this"
 
+def send_text():
+	# connect to the server
+	server = smtplib.SMTP('smtp.gmail.com:587')
+	server.login(address, password)
+
+	msg = MIMEMultipart()
+	msg['From'] = address
+	msg['To'] = phone_number
+	msg['Subject'] = 'Your daily git_text motivation'
+
+	server.sendmail(address, phone_number, msg.as_string())
+	server.quit()
+
 
 
 
