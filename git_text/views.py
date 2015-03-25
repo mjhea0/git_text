@@ -17,6 +17,7 @@ from info import *
 
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
 
 
 
@@ -62,7 +63,8 @@ def send_text(subject):
 	msg = MIMEMultipart()
 	msg['From'] = address
 	msg['To'] = phone_number
-	msg['Subject'] = subject
+	msg['Subject'] = 'Your Daily Git Text'
+	msg.attach(MIMEText(subject))
 
 	server.sendmail(address, phone_number, msg.as_string())
 	server.quit()
