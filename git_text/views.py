@@ -24,11 +24,11 @@ from email.MIMEMultipart import MIMEMultipart
 def get_updates():
 	git_commits = get_user_commits()
 	if git_commits["total_count"] > 0:
-		positive_text = get_positive_text()
-		return positive_text.contents["quote"]
-		#return "yayyyy", #send_text()
-	return "nayyyy"
-	return send_text()
+		subject = get_positive_text()
+		return "yayyyy", send_text(subject)
+	subject = get_negative_text()
+	return "nayyyy", send_text(subject)
+
 
 
 @app.route("/commits", methods=["GET"])
@@ -46,12 +46,12 @@ def get_user_commits():
 	#print moment.now()
 	url = 'https://api.github.com/search/repositories?q=user:kyle8285+pushed:{}'.format(today)
 	try:
-		r = requests.get(url)
-		return r.json()
+		resp = requests.get(url)
+		return resp.json()
 	except: # this needs to be fixed
 		return "fix this"
 
-def send_text():
+def send_text(subject):
 	# connect to the server
 	server = smtplib.SMTP('smtp.gmail.com:587')
 	server.ehlo()
@@ -62,7 +62,7 @@ def send_text():
 	msg = MIMEMultipart()
 	msg['From'] = address
 	msg['To'] = phone_number
-	msg['Subject'] = get_positive_text()
+	msg['Subject'] = subject
 
 	server.sendmail(address, phone_number, msg.as_string())
 	server.quit()
@@ -73,11 +73,9 @@ def get_positive_text():
 	try:
 		resp = requests.get(url)
 		resp = resp.json()
-		return resp
-		#print resp["quote"]
-		#return resp["quote"]
+		return resp["contents"]["quote"]
 	except:
 		return "Great job today, pal. Keep up the good work!"
 
-
-
+def get_negative_text():
+	return "You better commit before you go to sleep!"
