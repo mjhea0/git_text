@@ -23,9 +23,10 @@ from email.MIMEMultipart import MIMEMultipart
 @app.route("/", methods=["GET"])
 def get_updates():
 	git_commits = get_user_commits()
-	print type(git_commits)
 	if git_commits["total_count"] > 0:
-		return "yayyyyy", send_text()
+		positive_text = get_positive_text()
+		return positive_text["contents"]["quote"]
+		#return "yayyyy", #send_text()
 	return "nayyyy"
 	return send_text()
 
@@ -61,12 +62,22 @@ def send_text():
 	msg = MIMEMultipart()
 	msg['From'] = address
 	msg['To'] = phone_number
-	msg['Subject'] = 'Your daily git_text motivation'
+	msg['Subject'] = get_positive_text()
 
 	server.sendmail(address, phone_number, msg.as_string())
 	server.quit()
 
-
+def get_positive_text():
+	# use the theysaidso.com API to get the quote of the day
+	url = 'http://api.theysaidso.com/qod.json'
+	try:
+		resp = requests.get(url)
+		resp = resp.json()
+		return resp
+		#print resp["quote"]
+		#return resp["quote"]
+	except:
+		return "Great job today, pal. Keep up the good work!"
 
 
 
