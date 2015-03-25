@@ -25,7 +25,7 @@ def get_updates():
 	git_commits = get_user_commits()
 	if git_commits["total_count"] > 0:
 		positive_text = get_positive_text()
-		return positive_text["contents"]["quote"]
+		return positive_text.contents["quote"]
 		#return "yayyyy", #send_text()
 	return "nayyyy"
 	return send_text()
