@@ -13,7 +13,7 @@ import requests
 import moment
 from datetime import datetime
 
-from info import *
+#from info import *
 
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
