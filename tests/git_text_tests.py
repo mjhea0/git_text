@@ -5,9 +5,13 @@ import json
 
 from git_text import app
 from git_text import models
-from git_text.database import Base, engine, session
+#from git_text.database import Base, engine, session
 
 from datetime import datetime
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 class TestAPI(unittest.TestCase):
     """ Tests for the git_text API """
@@ -18,12 +22,19 @@ class TestAPI(unittest.TestCase):
         # Configure our app to use the testing database
         app.config.from_object('git_text.config.TestingConfig')
         self.client = app.test_client()
-
+        engine = create_engine(app.config["DATABASE_URI"])
+        Base = declarative_base()
+        Session = sessionmaker(bind=engine)
+        session = Session()
         # Set up the tables in the database
         Base.metadata.create_all(engine)
 
     def tearDown(self):
         """ Test teardown """
+        engine = create_engine(app.config["DATABASE_URI"])
+        Base = declarative_base()
+        Session = sessionmaker(bind=engine)
+        session = Session()
         session.close()
         # Remove the tables and their data from the database
         Base.metadata.drop_all(engine)
@@ -31,7 +42,7 @@ class TestAPI(unittest.TestCase):
     def test_app_is_testing(self):
         self.assertTrue(app.config['TESTING'])
         self.assertEqual(app.config['DATABASE_URI'],
-            'postgresql://localhost/git_text_test'
+            'sqlite://'
         )
 
     def test_get_empty_commits(self):
