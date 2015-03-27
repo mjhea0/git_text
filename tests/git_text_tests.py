@@ -31,7 +31,7 @@ class TestAPI(unittest.TestCase):
     def test_app_is_testing(self):
         self.assertTrue(app.config['TESTING'])
         self.assertEqual(app.config['DATABASE_URI'],
-            'postgresql://localhost:5432/git_text_test'
+            'postgresql://localhost/git_text_test'
         )
 
     def test_get_empty_commits(self):
