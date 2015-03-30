@@ -6,14 +6,14 @@ from flask import request, Response
 import models
 
 from git_text import app
-from database import session
+#from database import session
 
 import requests
 
 import moment
 from datetime import datetime
 
-#from info import *
+from info import *
 
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
@@ -32,15 +32,15 @@ def get_updates():
 
 
 
-@app.route("/commits", methods=["GET"])
-def get_commits():
+# @app.route("/commits", methods=["GET"])
+# def get_commits():
 
-	commits = session.query(models.Commit).all()
-	if not commits:
-		commits = []
+# 	commits = session.query(models.Commit).all()
+# 	if not commits:
+# 		commits = []
 
-	data = json.dumps([commit.as_dictionary() for commit in commits])
-	return Response(data, 200, mimetype="application/json")
+# 	data = json.dumps([commit.as_dictionary() for commit in commits])
+# 	return Response(data, 200, mimetype="application/json")
 
 def get_user_commits():
 	today = moment.now().format("YYYY-M-D")
