@@ -1,11 +1,20 @@
 import os
 
+SECRET_KEY = "change me!"
+ADDRESS = os.environ["address"]
+PASSWORD = os.environ["password"]
+PHONE_NUMBER = os.environ["phone_number"]
+USER_NAME = "kyle8285"
+
+
+class BaseConfig(object):
+    DEBUG = False
+
+
 class DevelopmentConfig(object):
-	#DATABASE_URI = "postgresql://localhost/git_text"
-	DEBUG = True
-	#SECRET_KEY = os.environ.get("SECRET_KEY", "")
+    DEBUG = True
+
 
 class TestingConfig(object):
-    #DATABASE_URI = "sqlite://"
-    DEBUG = True
+    DEBUG = False
     TESTING = True

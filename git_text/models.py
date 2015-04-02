@@ -19,4 +19,3 @@
 # 			"id": self.id,
 # 			"date": self.date
 # 		}
-
